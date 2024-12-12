@@ -1,0 +1,74 @@
+# Byte-compiled / optimized / DLL files
+*.pyc
+*.pyo
+*.pyd
+__pycache__/
+*.so
+
+# Django specific
+*.log
+*.pot
+*.pyc
+*.pyo
+db.sqlite3
+media/
+
+# Ignore staticfiles collected by Django
+/staticfiles/
+/static/
+
+# Local environment settings
+.env
+
+# Virtual Environment
+venv/
+env/
+ENV/
+
+# IDEs and Editors
+.vscode/
+.idea/
+*.swp
+*~
+
+# macOS
+.DS_Store
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Coverage reports
+htmlcov/
+.coverage
+*.cover
+.hypothesis/
+
+# Testing
+.pytest_cache/
+.tox/
+nosetests.xml
+coverage.xml
+*.cover
+*.log
+
+# Node.js
+node_modules/
+
+# Build
+build/
+dist/
+
+# Egg and wheel files
+*.egg-info/
+*.egg
+*.whl
+
+# Pipenv
+Pipfile.lock
+
+# Migrations
+*/migrations/*.pyc
+*/migrations/*.py
+!*/migrations/__init__.py
