@@ -1,0 +1,13 @@
+<!-- templates/user_auth/login.html -->
+<form method="post">
+    {% csrf_token %}
+    <h2>Login</h2>
+    {% if error %}
+        <p style="color: red;">{{ error }}</p>
+    {% endif %}
+    <label for="username">Username:</label>
+    <input type="text" name="username" id="username" required>
+    <label for="password">Password:</label>
+    <input type="password" name="password" id="password" required>
+    <button type="submit">Login</button>
+</form>

@@ -1,0 +1,32 @@
+<!-- templates/jobs/post_job.html -->
+<form method="post">
+    {% csrf_token %}
+    
+    <label for="title">Job Title:</label>
+    <input type="text" name="title" id="title" required>
+    
+    <label for="description">Description:</label>
+    <textarea name="description" id="description" required></textarea>
+    
+    <label for="location">Location:</label>
+    <input type="text" name="location" id="location" required>
+    
+    <label for="pay">Pay:</label>
+    <input type="number" name="pay" id="pay" required>
+    
+    <label for="qualification">Qualification:</label>
+    <textarea name="qualification" id="qualification" required></textarea>
+    
+    <label for="experience">Experience:</label>
+    <textarea name="experience" id="experience" required></textarea>
+    
+    <label for="job_type">Job Type:</label>
+    <select name="job_type" id="job_type" required>
+        <option value="FT">Full-Time</option>
+        <option value="PT">Part-Time</option>
+        <option value="CT">Contract</option>
+        <option value="IN">Internship</option>
+    </select>
+    
+    <button type="submit">Post Job</button>
+</form>

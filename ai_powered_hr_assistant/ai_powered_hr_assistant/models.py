@@ -1,4 +1,7 @@
+from django.contrib.auth.models import User
 from django.db import models
+from bson import ObjectId
+from djongo import models  # If using Djongo
 
 class CustomAdmin(models.Model):
     AdminID = models.AutoField(primary_key=True)
@@ -13,11 +16,13 @@ class Organization(models.Model):
     Location = models.CharField(max_length=255)
 
 class HR(models.Model):
-    HRID = models.AutoField(primary_key=True)
+    HRID = models.ObjectIdField()
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
     Name = models.CharField(max_length=255)
-    Email = models.EmailField()
-    Password = models.CharField(max_length=255)
-    OrganizationID = models.ForeignKey(Organization, on_delete=models.CASCADE)
+    OrganizationName = models.CharField(max_length=255)
+    
+    def __str__(self):
+        return f"{self.user.username} - {self.OrganizationName}"
 
 class Applicants(models.Model):
     ApplicantID = models.AutoField(primary_key=True)
@@ -27,11 +32,27 @@ class Applicants(models.Model):
     UploadedCV = models.FileField(upload_to='cvs/')
 
 class JobAd(models.Model):
+    
+    class Job_Type(models.TextChoices): 
+        FULL_TIME = 'FT', 'Full-Time' 
+        PART_TIME = 'PT', 'Part-Time' 
+        CONTRACT = 'CT', 'Contract' 
+        INTERN = 'IN', 'Internship'
+        
     JobAdID = models.AutoField(primary_key=True)
     Title = models.CharField(max_length=255)
     Description = models.TextField()
+    Location = models.CharField(max_length=255)
+    Pay=models.IntegerField()
+    Qualification=models.TextField()
+    Experience =models.TextField()
+    JobType = models.CharField(
+        max_length=2,
+        choices=Job_Type.choices,
+        default=Job_Type.FULL_TIME,
+    )
     PostedByHR = models.ForeignKey(HR, on_delete=models.CASCADE)
-    PostDate = models.DateTimeField()
+    PostDate = models.DateTimeField(auto_now_add=True)
 
 class CVScore(models.Model):
     ScoreID = models.AutoField(primary_key=True)

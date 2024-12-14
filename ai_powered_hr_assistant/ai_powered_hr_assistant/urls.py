@@ -1,11 +1,19 @@
 from django.contrib import admin
 from django.urls import path
-from .views import create_admin, get_all_applicants, recognize_employees_bulk, create_applicants
+from .views import create_admin, get_all_applicants, recognize_employees_bulk, create_applicants, post_job_ad, dashboard, register, user_login, user_logout, get_all_jobs
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('create-admin/', create_admin, name='create_admin'),
     path('create-applicants/', create_applicants, name='create_applicants'),
+    # path('create-job/', create_job, name='create_job'),
     path('get-applicants/', get_all_applicants, name='get_all_applicants'),
+    path('get-jobs/', get_all_jobs, name='get_all_jobs'),
     path('recognize-employee/', recognize_employees_bulk, name='recognize_employee'),
+    path('register/', register, name='register'),
+    path('login/', user_login, name='login'),
+    path('logout/', user_logout, name='logout'),
+    path('post-job/', post_job_ad, name='post_job'),
+    path('dashboard/',dashboard, name='dashboard')
 ]

@@ -1,0 +1,9 @@
+<!-- templates/user_auth/register.html -->
+<form method="post">
+    {% csrf_token %}
+    <h2>User Information</h2>
+    {{ user_form.as_p }}
+    <h2>HR Profile</h2>
+    {{ hr_form.as_p }}
+    <button type="submit">Register</button>
+</form>
