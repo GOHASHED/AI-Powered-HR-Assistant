@@ -1,9 +1,88 @@
-<!-- templates/user_auth/register.html -->
-<form method="post">
-    {% csrf_token %}
-    <h2>User Information</h2>
-    {{ user_form.as_p }}
-    <h2>HR Profile</h2>
-    {{ hr_form.as_p }}
-    <button type="submit">Register</button>
-</form>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Registration Form</title>
+</head>
+<body>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <h2>User Information</h2>
+        {{ user_form.as_p }}
+        
+        <h3>Select Role:</h3>
+        <label>
+            <input type="radio" name="role" value="hr" required> HR
+        </label>
+        <label>
+            <input type="radio" name="role" value="applicant"> Applicant
+        </label>
+        <label>
+            <input type="radio" name="role" value="employee"> Employee
+        </label>
+
+        <div id="hr_form" style="display: none;">
+            <h2>HR Profile</h2>
+            {% comment %} <label for="hr_name">Name</label>
+            <input type="text" id="hr_name" name="Name">
+            <label for="hr_organization">Organization Name</label>
+            <input type="text" id="hr_organization" name="OrganizationName"> {% endcomment %}
+            {{ hr_form.as_p }}
+        </div>
+        
+        <div id="applicant_form" style="display: none;">
+            <h2>Applicant Profile</h2>
+            {{ applicant_form.as_p }}
+        </div>
+        
+        <div id="employee_form" style="display: none;">
+            <h2>Employee Profile</h2>
+            {{ employee_form.as_p }}
+        </div>
+
+        <button type="submit">Register</button>
+    </form>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const roleRadios = document.querySelectorAll('input[name="role"]');
+            const forms = {
+                hr: document.getElementById('hr_form'),
+                applicant: document.getElementById('applicant_form'),
+                employee: document.getElementById('employee_form')
+            };
+
+            roleRadios.forEach(radio => {
+                radio.addEventListener('change', function() {
+                    // Hide all role-specific forms and clear their fields
+                    Object.values(forms).forEach(form => {
+                        form.style.display = 'none';
+                        form.querySelectorAll('input').forEach(input => {
+                            input.value = '';
+                            input.required = false;
+                            input.disabled = true; // Disable inputs
+                        });
+                    });
+                    
+                    // Enable only the selected form
+                    const formId = this.value + '_form';
+                    forms[this.value].style.display = 'block';
+                    
+                    // Make the fields in the visible form required and enabled
+                    forms[this.value].querySelectorAll('input').forEach(input => {
+                        input.required = true;
+                        input.disabled = false; // Enable inputs
+                    });
+                });
+            });
+
+            // Trigger change event on page load to ensure correct form is shown
+            roleRadios.forEach(radio => {
+                if (radio.checked) {
+                    radio.dispatchEvent(new Event('change'));
+                }
+            });
+        });
+    </script>
+</body>
+</html>

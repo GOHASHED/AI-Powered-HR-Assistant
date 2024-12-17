@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Job Listings</title>
+</head>
+<body>
+    <h1>Job Listings</h1>
+    {% if job_ads %}
+        <ul>
+            {% for job in job_ads %}
+                <li>
+                    <h2>{{ job.Title }}</h2>
+                    <p><strong>Description:</strong> {{ job.Description }}</p>
+                    <p><strong>Location:</strong> {{ job.Location }}</p>
+                    <p><strong>Pay:</strong> {{ job.Pay }}</p>
+                    <p><strong>Qualification:</strong> {{ job.Qualification }}</p>
+                    <p><strong>Experience:</strong> {{ job.Experience }}</p>
+                    <p><strong>Job Type:</strong> {{ job.get_JobType_display }}</p>
+                    <p><strong>Posted by:</strong> {{ job.PostedByHR.Name }}</p>
+                    <form method="post" action="{% url 'apply_job' job.JobAdID %}">
+                        {% csrf_token %}
+                        <button type="submit">Apply</button>
+                    </form>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No job ads found.</p>
+    {% endif %}
+</body>
+</html>

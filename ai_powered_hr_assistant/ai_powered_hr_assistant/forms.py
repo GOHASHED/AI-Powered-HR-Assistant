@@ -1,7 +1,7 @@
 # user_auth/forms.py
 from django import forms
 from django.contrib.auth.models import User
-from .models import HR
+from .models import HR, Applicants, Employee
 
 class UserRegistrationForm(forms.ModelForm):
     password = forms.CharField(widget=forms.PasswordInput)
@@ -24,4 +24,25 @@ class UserRegistrationForm(forms.ModelForm):
 class HRProfileForm(forms.ModelForm):
     class Meta:
         model = HR
-        fields = ['Name','OrganizationName']
+        fields = ['Name', 'OrganizationName']
+        widgets = {
+            'Name': forms.TextInput(attrs={'id': 'hr_name'}),
+            'OrganizationName': forms.TextInput(attrs={'id': 'hr_organization'}),
+        }
+
+class ApplicantsProfileForm(forms.ModelForm):
+    class Meta:
+        model = Applicants
+        fields = ['Name', 'UploadedCV']
+        widgets = {
+            'Name': forms.TextInput(attrs={'id': 'applicant_name'}),
+        }
+        
+class EmployeeProfileForm(forms.ModelForm):
+    class Meta:
+        model = Employee
+        fields = ['Name', 'Department', 'Position', 'OrganizationName']
+        widgets = {
+            'Name': forms.TextInput(attrs={'id': 'employee_name'}),
+            'OrganizationName': forms.TextInput(attrs={'id': 'employee_organization'}),
+        }

@@ -1,3 +1,4 @@
+#models.py
 from django.contrib.auth.models import User
 from django.db import models
 from bson import ObjectId
@@ -16,7 +17,7 @@ class Organization(models.Model):
     Location = models.CharField(max_length=255)
 
 class HR(models.Model):
-    HRID = models.ObjectIdField()
+    HRID = models.ObjectIdField(primary_key=True, default=ObjectId)
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     Name = models.CharField(max_length=255)
     OrganizationName = models.CharField(max_length=255)
@@ -25,10 +26,11 @@ class HR(models.Model):
         return f"{self.user.username} - {self.OrganizationName}"
 
 class Applicants(models.Model):
-    ApplicantID = models.AutoField(primary_key=True)
+    ApplicantID = models.ObjectIdField()
+    user= models.OneToOneField(User,on_delete=models.CASCADE)
     Name = models.CharField(max_length=255)
-    Email = models.EmailField()
-    Password = models.CharField(max_length=255)
+    # Email = models.EmailField()
+    # Password = models.CharField(max_length=255)
     UploadedCV = models.FileField(upload_to='cvs/')
 
 class JobAd(models.Model):
@@ -62,11 +64,13 @@ class CVScore(models.Model):
     MatchPercentage = models.FloatField()
 
 class Employee(models.Model):
-    EmployeeID = models.AutoField(primary_key=True)
+    EmployeeID = models.ObjectIdField()
+    user= models.OneToOneField(User,on_delete=models.CASCADE)
     Name = models.CharField(max_length=255)
     Department = models.CharField(max_length=255)
     Position = models.CharField(max_length=255)
-    OrganizationID = models.ForeignKey(Organization, on_delete=models.CASCADE)
+    OrganizationName = models.CharField(max_length=255)
+    # OrganizationID = models.ForeignKey(Organization, on_delete=models.CASCADE)
 
 class SentimentAnalysis(models.Model):
     AnalysisID = models.AutoField(primary_key=True)
