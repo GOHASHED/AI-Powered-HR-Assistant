@@ -139,19 +139,6 @@ def post_job_ad(request):
 
 def dashboard(request):
     return render(request, 'dashboard.html')
-    
-# @login_required
-# def get_all_jobs(request):
-#     try:
-#         job_ads = JobAd.objects.all()
-#         if not job_ads:
-#             return JsonResponse({"message": "No job ad found"}, status=404)
-#         job_ad_list = list(job_ads.values())
-#         for job_ad in job_ad_list:
-#             job_ad["JobAdID"] = str(job_ad["JobAdID"])
-#         return JsonResponse(job_ad_list, safe=False)
-#     except Exception as e:
-#         return JsonResponse({"error": str(e)}, status=500)
 
 @login_required
 def get_all_jobs(request):
@@ -161,9 +148,23 @@ def get_all_jobs(request):
             return render(request, 'jobs/dashboard.html')
         return render(request, 'jobs/job_list.html', {'job_ads': job_ads})
     except Exception as e:
-        return render(request, 'jobs/job_ad.html', {'error': str(e)})
+        return JsonResponse({"error": str(e)}, status=500)
 
-
+@login_required 
+@csrf_exempt 
+def apply_job(request, job_id): 
+    try:
+        job_ad = JobAd.objects.get(pk=job_id) 
+        applicant = Applicants.objects.get(user=request.user) 
+        applicant.save() # Logic to handle the job application can be added here 
+        return redirect('/jobs') 
+    except JobAd.DoesNotExist: 
+        return JsonResponse({"error": "Job ad not found"}, status=404) 
+    except Applicants.DoesNotExist: 
+        return JsonResponse({"error": "Applicant profile does not exist"}, status=400) 
+    except Exception as e: 
+        return JsonResponse({"error": str(e)}, status=500)
+    
 # @csrf_exempt
 # def create_applicants(request):
 #     if request.method == "POST":

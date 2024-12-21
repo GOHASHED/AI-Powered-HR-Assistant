@@ -1,6 +1,6 @@
 from django.contrib import admin
-from django.urls import path
-from .views import create_admin, post_job_ad, dashboard, register, user_login, user_logout, get_all_jobs
+from django.urls import path, re_path
+from .views import create_admin, post_job_ad, dashboard, register, user_login, user_logout, get_all_jobs, apply_job
 #  get_all_applicants, recognize_employees_bulk, create_applicants,
 
 urlpatterns = [
@@ -15,5 +15,6 @@ urlpatterns = [
     path('login/', user_login, name='login'),
     path('logout/', user_logout, name='logout'),
     path('post-job/', post_job_ad, name='post_job'),
-    path('dashboard/',dashboard, name='dashboard')
+    path('dashboard/',dashboard, name='dashboard'),
+    re_path(r'^apply-job/(?P<job_id>[a-f0-9]{24})/$', apply_job, name='apply_job'), # Update to handle ObjectId
 ]

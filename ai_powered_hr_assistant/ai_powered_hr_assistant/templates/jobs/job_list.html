@@ -18,7 +18,8 @@
                     <p><strong>Experience:</strong> {{ job.Experience }}</p>
                     <p><strong>Job Type:</strong> {{ job.get_JobType_display }}</p>
                     <p><strong>Posted by:</strong> {{ job.PostedByHR.Name }}</p>
-                    <form method="post" action="{% url 'apply_job' job.JobAdID %}">
+                    <p><strong>Posted on:</strong> {{ job.PostDate }}</p>
+                    <form method="post" action="{% url 'apply_job' job.get_id %}">
                         {% csrf_token %}
                         <button type="submit">Apply</button>
                     </form>

@@ -29,8 +29,6 @@ class Applicants(models.Model):
     ApplicantID = models.ObjectIdField()
     user= models.OneToOneField(User,on_delete=models.CASCADE)
     Name = models.CharField(max_length=255)
-    # Email = models.EmailField()
-    # Password = models.CharField(max_length=255)
     UploadedCV = models.FileField(upload_to='cvs/')
 
 class JobAd(models.Model):
@@ -41,7 +39,7 @@ class JobAd(models.Model):
         CONTRACT = 'CT', 'Contract' 
         INTERN = 'IN', 'Internship'
         
-    JobAdID = models.AutoField(primary_key=True)
+    _id = models.ObjectIdField(primary_key=True, default=ObjectId)
     Title = models.CharField(max_length=255)
     Description = models.TextField()
     Location = models.CharField(max_length=255)
@@ -55,6 +53,9 @@ class JobAd(models.Model):
     )
     PostedByHR = models.ForeignKey(HR, on_delete=models.CASCADE)
     PostDate = models.DateTimeField(auto_now_add=True)
+    
+    def get_id(self): 
+        return self._id
 
 class CVScore(models.Model):
     ScoreID = models.AutoField(primary_key=True)
