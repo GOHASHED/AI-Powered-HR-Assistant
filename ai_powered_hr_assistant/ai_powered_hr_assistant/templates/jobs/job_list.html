@@ -1,3 +1,4 @@
+<!--AI_POWERED_HR_ASSISTANT/ai_powered_hr_assistant/templates/jobs/job_list.html-->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -19,7 +20,7 @@
                     <p><strong>Job Type:</strong> {{ job.get_JobType_display }}</p>
                     <p><strong>Posted by:</strong> {{ job.PostedByHR.Name }}</p>
                     <p><strong>Posted on:</strong> {{ job.PostDate }}</p>
-                    <form method="post" action="{% url 'apply_job' job.get_id %}">
+                    <form method="post" action="{% url 'apply_job' job.pk %}">
                         {% csrf_token %}
                         <button type="submit">Apply</button>
                     </form>
@@ -30,4 +31,14 @@
         <p>No job ads found.</p>
     {% endif %}
 </body>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        let changeCv = confirm("Do you want to continue with the existing CV or upload a new one?");
+        if (!changeCv) {
+            window.location.href = "{% url 'upload_cv' %}"; // Redirect to CV upload page
+        }
+    });
+</script>
+
+
 </html>

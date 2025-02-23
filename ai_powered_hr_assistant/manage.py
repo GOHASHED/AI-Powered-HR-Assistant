@@ -6,7 +6,7 @@ import sys
 
 def main():
     """Run administrative tasks."""
-    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'ai_powered_hr_assistant.settings')
+    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'ai_powered_hr_system_setup.settings')
     try:
         from django.core.management import execute_from_command_line
     except ImportError as exc:

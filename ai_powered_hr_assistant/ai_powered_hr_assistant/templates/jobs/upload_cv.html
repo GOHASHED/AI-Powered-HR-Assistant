@@ -1,0 +1,6 @@
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <h2>Upload New CV</h2>
+    <input type="file" name="cv" required>
+    <button type="submit">Upload</button>
+</form>
