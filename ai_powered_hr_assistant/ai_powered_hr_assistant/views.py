@@ -19,10 +19,11 @@ from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
-from .models import CustomAdmin, HR, Applicants, JobAd, Employee
+from .models import CustomAdmin, HR, Applicants, JobAd, Employee, JobApplication
 from .serializers import CustomAdminSerializer, HRSerializer, ApplicantsSerializer, JobAdSerializer, EmployeeSerializer
 from .forms import UserRegistrationForm, HRProfileForm, ApplicantsProfileForm, EmployeeProfileForm
 from django.core.files.storage import default_storage
+from bson.objectid import ObjectId
 
 @api_view(['POST'])
 def create_admin(request):
@@ -115,15 +116,23 @@ class JobAdDetail(generics.RetrieveUpdateDestroyAPIView):
 @api_view(['POST'])
 def apply_job(request, job_id):
     try:
-        job_ad = JobAd.objects.get(_id=job_id)
+        job_id_obj = ObjectId(job_id)
+        job_ad = JobAd.objects.get(_id=job_id_obj)
         applicant = Applicants.objects.get(user=request.user)
+        
+        application = JobApplication.objects.create(
+            Applicant=applicant,
+            JobAd=job_ad,
+            Status='Pending'
+        )
         # Add application logic if needed (e.g., save to a model)
         return Response({"message": "Applied successfully"}, status=status.HTTP_200_OK)
     except JobAd.DoesNotExist:
         return Response({"error": "Job not found"}, status=status.HTTP_404_NOT_FOUND)
     except Applicants.DoesNotExist:
         return Response({"error": "Applicant not found"}, status=status.HTTP_404_NOT_FOUND)
-
+    except Exception as e:
+        return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
 

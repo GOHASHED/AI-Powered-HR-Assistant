@@ -48,8 +48,16 @@ class JobAd(models.Model):
     JobType = models.CharField(max_length=2, choices=Job_Type.choices, default=Job_Type.FULL_TIME)
     PostedByHR = models.ForeignKey(HR, on_delete=models.CASCADE)
     PostDate = models.DateTimeField(auto_now_add=True)
+
     class Meta:
         db_table = 'ai_powered_hr_assistant_jobad'
+
+class JobApplication(models.Model):
+    ApplicationID = models.ObjectIdField(primary_key=True, default=ObjectId)
+    Applicant = models.ForeignKey(Applicants, on_delete=models.CASCADE, related_name='applications')
+    JobAd = models.ForeignKey(JobAd, on_delete=models.CASCADE, related_name='applications')
+    ApplicationDate = models.DateTimeField(auto_now_add=True)
+    Status = models.CharField(max_length=50, default='Pending')  # e.g., 'Pending', 'Reviewed', 'Accepted', 'Rejected'
 
 # Keep other models (CVScore, Employee, etc.) as is for now unless you need specific changes
 
@@ -116,6 +124,8 @@ class CVScore(models.Model):
     JobAdID = models.ForeignKey(JobAd, on_delete=models.CASCADE)
     Score = models.FloatField()
     MatchPercentage = models.FloatField()
+    AnalysisDate = models.DateTimeField(auto_now_add=True,blank=True,null=True)
+    Notes = models.TextField(null=True, blank=True)
 
 class Employee(models.Model):
     EmployeeID = models.ObjectIdField(primary_key=True, default=ObjectId)
