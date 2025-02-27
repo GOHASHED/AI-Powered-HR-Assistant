@@ -70,5 +70,4 @@ Pipfile.lock
 
 # Migrations
 */migrations/*.pyc
-*/migrations/*.py
 !*/migrations/__init__.py

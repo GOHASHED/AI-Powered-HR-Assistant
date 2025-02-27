@@ -5,19 +5,19 @@ from bson import ObjectId
 from djongo import models
 
 class CustomAdmin(models.Model):
-    AdminID = models.AutoField(primary_key=True)
+    _id = models.AutoField(primary_key=True)
     Name = models.CharField(max_length=255)
     Email = models.EmailField(unique=True)
     Password = models.CharField(max_length=255)  # Use Django's password hashing later
 
 class Organization(models.Model):
-    OrganizationID = models.AutoField(primary_key=True)
+    _id = models.AutoField(primary_key=True)
     Name = models.CharField(max_length=255, unique=True)
     Industry = models.CharField(max_length=255)
     Location = models.CharField(max_length=255)
 
 class HR(models.Model):
-    HRID = models.ObjectIdField(primary_key=True, default=ObjectId)
+    _id = models.ObjectIdField(primary_key=True, default=ObjectId)
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     Name = models.CharField(max_length=255)
     OrganizationName = models.CharField(max_length=255)
@@ -26,7 +26,7 @@ class HR(models.Model):
         return f"{self.user.username} - {self.OrganizationName}"
 
 class Applicants(models.Model):
-    ApplicantID = models.ObjectIdField(primary_key=True, default=ObjectId)
+    _id = models.ObjectIdField(primary_key=True, default=ObjectId)
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     Name = models.CharField(max_length=255)
     UploadedCV = models.FileField(upload_to='cvs/', null=True, blank=True)
@@ -53,34 +53,11 @@ class JobAd(models.Model):
         db_table = 'ai_powered_hr_assistant_jobad'
 
 class JobApplication(models.Model):
-    ApplicationID = models.ObjectIdField(primary_key=True, default=ObjectId)
+    _id = models.ObjectIdField(primary_key=True, default=ObjectId)
     Applicant = models.ForeignKey(Applicants, on_delete=models.CASCADE, related_name='applications')
     JobAd = models.ForeignKey(JobAd, on_delete=models.CASCADE, related_name='applications')
     ApplicationDate = models.DateTimeField(auto_now_add=True)
     Status = models.CharField(max_length=50, default='Pending')  # e.g., 'Pending', 'Reviewed', 'Accepted', 'Rejected'
-
-# Keep other models (CVScore, Employee, etc.) as is for now unless you need specific changes
-
-# class CustomAdmin(models.Model):
-#     AdminID = models.AutoField(primary_key=True)
-#     Name = models.CharField(max_length=255)
-#     Email = models.EmailField()
-#     Password = models.CharField(max_length=255)
-
-# class Organization(models.Model):
-#     OrganizationID = models.AutoField(primary_key=True)
-#     Name = models.CharField(max_length=255)
-#     Industry = models.CharField(max_length=255)
-#     Location = models.CharField(max_length=255)
-
-# class HR(models.Model):
-#     HRID = models.ObjectIdField(primary_key=True, default=ObjectId)
-#     user = models.OneToOneField(User, on_delete=models.CASCADE)
-#     Name = models.CharField(max_length=255)
-#     OrganizationName = models.CharField(max_length=255)
-    
-#     def __str__(self):
-#         return f"{self.user.username} - {self.OrganizationName}"
 
 # class Applicants(models.Model):
 #     ApplicantID = models.ObjectIdField(primary_key=True, default=ObjectId)
@@ -92,32 +69,6 @@ class JobApplication(models.Model):
 #         #     self.ApplicantID = ObjectId()  # Generate an ObjectId if it doesn't exist
 #         super().save(*args, **kwargs)
 
-# class JobAd(models.Model):
-    
-#     class Job_Type(models.TextChoices): 
-#         FULL_TIME = 'FT', 'Full-Time' 
-#         PART_TIME = 'PT', 'Part-Time' 
-#         CONTRACT = 'CT', 'Contract' 
-#         INTERN = 'IN', 'Internship'
-        
-#     _id = models.ObjectIdField(primary_key=True, default=ObjectId)
-#     Title = models.CharField(max_length=255)
-#     Description = models.TextField()
-#     Location = models.CharField(max_length=255)
-#     Pay=models.IntegerField()
-#     Qualification=models.TextField()
-#     Experience =models.TextField()
-#     JobType = models.CharField(
-#         max_length=2,
-#         choices=Job_Type.choices,
-#         default=Job_Type.FULL_TIME,
-#     )
-#     PostedByHR = models.ForeignKey(HR, on_delete=models.CASCADE)
-#     PostDate = models.DateTimeField(auto_now_add=True)
-    
-    # def get_id(self): 
-    #     return self._id
-
 class CVScore(models.Model):
     ScoreID = models.AutoField(primary_key=True)
     ApplicantID = models.ForeignKey(Applicants, on_delete=models.CASCADE)
@@ -128,7 +79,7 @@ class CVScore(models.Model):
     Notes = models.TextField(null=True, blank=True)
 
 class Employee(models.Model):
-    EmployeeID = models.ObjectIdField(primary_key=True, default=ObjectId)
+    _id = models.ObjectIdField(primary_key=True, default=ObjectId)
     user= models.OneToOneField(User,on_delete=models.CASCADE)
     Name = models.CharField(max_length=255)
     Department = models.CharField(max_length=255)
@@ -137,14 +88,14 @@ class Employee(models.Model):
     # OrganizationID = models.ForeignKey(Organization, on_delete=models.CASCADE)
 
 class SentimentAnalysis(models.Model):
-    AnalysisID = models.AutoField(primary_key=True)
+    _id = models.AutoField(primary_key=True)
     EmployeeID = models.ForeignKey(Employee, on_delete=models.CASCADE)
     SentimentScore = models.FloatField()
     FeedbackType = models.CharField(max_length=255)
     Date = models.DateTimeField()
 
 class EmployeeRecognition(models.Model):
-    RecognitionID = models.AutoField(primary_key=True)
+    _id = models.AutoField(primary_key=True)
     EmployeeID = models.ForeignKey(Employee, on_delete=models.CASCADE)
     PerformanceScore = models.FloatField()
     RecognitionType = models.CharField(max_length=255)
@@ -158,14 +109,14 @@ class Chatbot(models.Model):
     EmployeeID = models.ForeignKey(Employee, on_delete=models.CASCADE, null=True, blank=True)
 
 class InterviewSchedule(models.Model):
-    ScheduleID = models.AutoField(primary_key=True)
+    _id = models.AutoField(primary_key=True)
     ApplicantID = models.ForeignKey(Applicants, on_delete=models.CASCADE)
     InterviewerID = models.ForeignKey(HR, on_delete=models.CASCADE)
     JobAdID = models.ForeignKey(JobAd, on_delete=models.CASCADE)
     ScheduledTime = models.DateTimeField()
 
 class TeamLead(models.Model):
-    TeamLeadID = models.AutoField(primary_key=True)
+    _id = models.AutoField(primary_key=True)
     Name = models.CharField(max_length=255)
     EmployeeID = models.ForeignKey(Employee, on_delete=models.CASCADE)
     CurrentProject=models.CharField(max_length=255)
@@ -173,7 +124,7 @@ class TeamLead(models.Model):
     
 
 class Recognition(models.Model):
-    RecognitionID = models.AutoField(primary_key=True)
+    _id = models.AutoField(primary_key=True)
     TeamLeadID = models.ForeignKey(TeamLead, on_delete=models.CASCADE)
     EmployeeID = models.ForeignKey(Employee, on_delete=models.CASCADE)
     Remarks = models.TextField()

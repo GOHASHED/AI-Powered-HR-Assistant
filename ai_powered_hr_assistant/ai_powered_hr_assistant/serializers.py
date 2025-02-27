@@ -4,18 +4,18 @@ from .models import CustomAdmin, HR, Applicants, JobAd, Employee
 class CustomAdminSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomAdmin
-        fields = ['AdminID', 'Name', 'Email']
+        fields = ['_id', 'Name', 'Email']
 
 class HRSerializer(serializers.ModelSerializer):
     class Meta:
         model = HR
-        fields = ['HRID', 'Name', 'OrganizationName', 'user']
+        fields = ['_id', 'Name', 'OrganizationName', 'user']
 
 class ApplicantsSerializer(serializers.ModelSerializer):
     UploadedCV = serializers.FileField(required=False)
     class Meta:
         model = Applicants
-        fields = ['ApplicantID', 'Name', 'UploadedCV', 'user']
+        fields = ['_id', 'Name', 'UploadedCV', 'user']
 
 class JobAdSerializer(serializers.ModelSerializer):
     PostedByHR = HRSerializer(read_only=True)
@@ -26,4 +26,4 @@ class JobAdSerializer(serializers.ModelSerializer):
 class EmployeeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Employee
-        fields = ['EmployeeID', 'Name', 'Department', 'Position', 'OrganizationName', 'user']
+        fields = ['_id', 'Name', 'Department', 'Position', 'OrganizationName', 'user']
