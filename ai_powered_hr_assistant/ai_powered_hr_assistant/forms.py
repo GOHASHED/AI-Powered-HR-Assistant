@@ -1,4 +1,4 @@
-# user_auth/forms.py
+# ai_powered_hr_assistant/forms.py
 from django import forms
 from django.contrib.auth.models import User
 from .models import HR, Applicants, Employee
@@ -9,7 +9,7 @@ class UserRegistrationForm(forms.ModelForm):
 
     class Meta:
         model = User
-        fields = ['username', 'email', 'password']
+        fields = ['username', 'email']
 
     def clean(self):
         cleaned_data = super().clean()
@@ -20,6 +20,12 @@ class UserRegistrationForm(forms.ModelForm):
             raise forms.ValidationError("Passwords do not match.")
         return cleaned_data
 
+    def save(self, commit=True):
+        user = super().save(commit=False)
+        user.set_password(self.cleaned_data["password"])
+        if commit:
+            user.save()
+        return user
 
 class HRProfileForm(forms.ModelForm):
     class Meta:
@@ -37,7 +43,7 @@ class ApplicantsProfileForm(forms.ModelForm):
         widgets = {
             'Name': forms.TextInput(attrs={'id': 'applicant_name'}),
         }
-        
+
 class EmployeeProfileForm(forms.ModelForm):
     class Meta:
         model = Employee

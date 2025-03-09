@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/3.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.1/ref/settings/
 """
-
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -85,12 +85,23 @@ WSGI_APPLICATION = 'ai_powered_hr_system_setup.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'djongo',
+#         'NAME': 'hr_db',  # Name of your MongoDB database
+#         'HOST': 'localhost',          # Replace with your MongoDB host (e.g., MongoDB Atlas URI)
+#         'PORT': 27017,  
+#     }
+# }
+
 DATABASES = {
     'default': {
-        'ENGINE': 'djongo',
-        'NAME': 'hr_db',  # Name of your MongoDB database
-        'HOST': 'localhost',          # Replace with your MongoDB host (e.g., MongoDB Atlas URI)
-        'PORT': 27017,  
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'hr_db',  # Your empty database name
+        'USER': 'postgres',  # Default PostgreSQL user (or your custom user)
+        'PASSWORD': 'knysys',  # Replace with your PostgreSQL password
+        'HOST': 'localhost',
+        'PORT': '5432',  # Default PostgreSQL port
     }
 }
 
