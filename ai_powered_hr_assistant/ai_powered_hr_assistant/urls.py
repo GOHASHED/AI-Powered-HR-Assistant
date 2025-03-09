@@ -32,6 +32,6 @@ urlpatterns = [
     path('logout/', user_logout, name='logout'),
     path('upload-cv/', upload_cv, name='upload_cv'),
     path('jobs/', JobAdListCreate.as_view(), name='job_list_create'),
-    path('jobs/<str:pk>/', JobAdDetail.as_view(), name='job_detail'),
-    path('apply-job/<str:job_id>/', apply_job, name='apply_job'),
+    path('jobs/<int:pk>/', JobAdDetail.as_view(), name='job_detail'),
+    path('apply-job/<int:job_id>/', apply_job, name='apply_job'),
 ]
