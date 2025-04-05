@@ -23,7 +23,7 @@
 
 
 from django.urls import path
-from .views import create_admin, register, user_login, user_logout, upload_cv, JobAdListCreate, JobAdDetail, apply_job
+from .views import create_admin, register, user_login, user_logout, upload_cv, JobAdListCreate, JobAdDetail, apply_job, get_all_job_applications
 
 urlpatterns = [
     path('create-admin/', create_admin, name='create_admin'),
@@ -34,4 +34,5 @@ urlpatterns = [
     path('jobs/', JobAdListCreate.as_view(), name='job_list_create'),
     path('jobs/<int:pk>/', JobAdDetail.as_view(), name='job_detail'),
     path('apply-job/<int:job_id>/', apply_job, name='apply_job'),
+    path('job-applications/', get_all_job_applications, name='get_all_job_applications')
 ]

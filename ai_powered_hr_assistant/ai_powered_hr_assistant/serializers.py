@@ -1,6 +1,6 @@
 # ai_powered_hr_assistant/serializers.py
 from rest_framework import serializers
-from .models import CustomAdmin, HR, Applicants, JobAd, Employee
+from .models import CustomAdmin, HR, Applicants, JobAd, Employee, JobApplication
 
 class CustomAdminSerializer(serializers.ModelSerializer):
     class Meta:
@@ -16,7 +16,7 @@ class ApplicantsSerializer(serializers.ModelSerializer):
     UploadedCV = serializers.FileField(required=False)
     class Meta:
         model = Applicants
-        fields = ['id', 'Name', 'UploadedCV', 'user']
+        fields = ['id', 'Name', 'UploadedCV', 'user','resume_data', 'clean_data']
 
 class JobAdSerializer(serializers.ModelSerializer):
     PostedByHR = HRSerializer(read_only=True)
@@ -28,3 +28,11 @@ class EmployeeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Employee
         fields = ['id', 'Name', 'Department', 'Position', 'OrganizationName', 'user']
+        
+class JobApplicationSerializer(serializers.ModelSerializer):
+    Applicant = ApplicantsSerializer(read_only=True)
+    JobAd = JobAdSerializer(read_only=True)
+
+    class Meta:
+        model = JobApplication
+        fields = ['id', 'Applicant', 'JobAd', 'ApplicationDate', 'Status', 'Score']

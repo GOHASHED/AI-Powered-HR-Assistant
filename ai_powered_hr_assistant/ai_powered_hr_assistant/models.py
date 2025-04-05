@@ -37,6 +37,8 @@ class Applicants(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     Name = models.CharField(max_length=255)
     UploadedCV = models.FileField(upload_to='cvs/', null=True, blank=True)
+    resume_data = models.TextField(null=True, blank=True)
+    clean_data = models.TextField(null=True, blank=True)
 
     class Meta:
         db_table = 'ai_powered_hr_assistant_applicants'
@@ -68,6 +70,7 @@ class JobApplication(models.Model):
     JobAd = models.ForeignKey(JobAd, on_delete=models.CASCADE, related_name='applications')
     ApplicationDate = models.DateTimeField(auto_now_add=True)
     Status = models.CharField(max_length=50, default='Pending')
+    Score = models.FloatField(default=0.0)
 
     class Meta:
         db_table = 'ai_powered_hr_assistant_jobapplication'
