@@ -162,7 +162,7 @@ from .models import CustomAdmin, HR, Applicants, JobAd, Employee, JobApplication
 from .serializers import CustomAdminSerializer, HRSerializer, ApplicantsSerializer, JobAdSerializer, EmployeeSerializer, JobApplicationSerializer
 from .forms import UserRegistrationForm, HRProfileForm, ApplicantsProfileForm, EmployeeProfileForm
 from django.core.files.storage import default_storage
-from .permissions import IsHRUser
+from .permissions import IsHRUserOrCandidateReadOnly
 from resume_matcher.scripts.ResumeProcessor import ResumeProcessor
 import os
 import json
@@ -278,7 +278,7 @@ def upload_cv(request):
 class JobAdListCreate(generics.ListCreateAPIView):
     queryset = JobAd.objects.all()
     serializer_class = JobAdSerializer
-    permission_classes = [IsHRUser]  # Restrict to HR users only
+    permission_classes = [IsHRUserOrCandidateReadOnly]
 
     def perform_create(self, serializer):
         hr = HR.objects.get(user=self.request.user)
@@ -287,8 +287,8 @@ class JobAdListCreate(generics.ListCreateAPIView):
 class JobAdDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = JobAd.objects.all()
     serializer_class = JobAdSerializer
-    permission_classes = [IsHRUser]  # Restrict to HR users only
-
+    permission_classes = [IsHRUserOrCandidateReadOnly]
+    
     def update(self, request, *args, **kwargs):
         instance = self.get_object()
         serializer = self.get_serializer(instance, data=request.data, partial=True)
