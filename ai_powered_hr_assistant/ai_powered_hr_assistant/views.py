@@ -153,7 +153,7 @@
 
 # ai_powered_hr_assistant/views.py
 from rest_framework import generics, status
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes, authentication_classes
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth import authenticate, login, logout
@@ -169,6 +169,12 @@ import json
 import numpy as np
 from sentence_transformers import SentenceTransformer
 import faiss
+from django.core.mail import send_mail
+from rest_framework.permissions import AllowAny
+from rest_framework.authentication import SessionAuthentication
+from django.views.decorators.csrf import csrf_exempt
+from django.template.loader import render_to_string
+from django.utils.html import strip_tags
 
 @api_view(['POST'])
 def create_admin(request):
@@ -216,18 +222,24 @@ def register(request):
                             # Extract resume_data and clean_data from the dictionary
                             resume_data = resume_dict.get('resume_data', '')
                             clean_data = resume_dict.get('clean_data', '')
+                            email = resume_dict.get('emails', '')
+                            email = email[0] if email else ''
+
                             
                             # Save as JSON strings in the Applicants model
                             applicant.resume_data = json.dumps(resume_data) if resume_data else ''
                             applicant.clean_data = json.dumps(clean_data) if clean_data else ''
+                            applicant.email = json.dumps(email) if email else ''
                         else:
                             print("Failed to process resume, but continuing with registration.")
                             applicant.resume_data = ''
                             applicant.clean_data = ''
+                            applicant.email = ''
                     except Exception as e:
                         print(f"Error processing resume: {str(e)}")
                         applicant.resume_data = ''
                         applicant.clean_data = ''
+                        applicant.email = ''
                 
                 applicant.save()
                 return Response({"message": "Applicant registered", "applicant_id": applicant.id}, status=status.HTTP_201_CREATED)
@@ -364,5 +376,56 @@ def get_all_job_applications(request):
             "data": serializer.data
         }, status=status.HTTP_200_OK)
     
+    except Exception as e:
+        return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+@api_view(['POST'])
+@authentication_classes([])
+@permission_classes([AllowAny])
+def send_notification_email(request):
+    try:
+        to_email = request.data.get('to_email')
+        candidate_name = request.data.get('candidate_name', 'Candidate')
+        job_title = request.data.get('job_title', 'unspecified position')
+        interview_date = request.data.get('interview_date', 'TBD')
+        interview_time = request.data.get('interview_time', 'TBD')
+        interview_location = request.data.get('interview_location', 'TBD')
+        company_name = request.data.get('company_name', 'HR Portal')
+        contact_email = 'hrportal94@gmail.com'
+
+
+        if not to_email:
+            return Response({"error": "Recipient email not provided"}, status=status.HTTP_400_BAD_REQUEST)
+
+        subject = f"Interview Invitation for {job_title} - {company_name}"
+
+
+        context = {
+            'candidate_name': candidate_name,
+            'job_title': job_title,
+            'interview_date': interview_date,
+            'interview_time': interview_time,
+            'interview_location': interview_location,
+            'company_name': company_name,
+            'contact_email': contact_email,
+        }
+
+
+        html_message = render_to_string('template.html', context)
+
+
+        plain_message = strip_tags(html_message)
+
+        send_mail(
+            subject=subject,
+            message=plain_message, 
+            from_email='hrportal94@gmail.com',
+            recipient_list=[to_email],
+            html_message=html_message,  
+            fail_silently=False,
+        )
+
+        return Response({"message": "Email sent successfully"}, status=status.HTTP_200_OK)
+
     except Exception as e:
         return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

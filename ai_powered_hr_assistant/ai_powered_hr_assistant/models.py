@@ -39,6 +39,7 @@ class Applicants(models.Model):
     UploadedCV = models.FileField(upload_to='cvs/', null=True, blank=True)
     resume_data = models.TextField(null=True, blank=True)
     clean_data = models.TextField(null=True, blank=True)
+    email = models.TextField(null=True, blank=True)
 
     class Meta:
         db_table = 'ai_powered_hr_assistant_applicants'

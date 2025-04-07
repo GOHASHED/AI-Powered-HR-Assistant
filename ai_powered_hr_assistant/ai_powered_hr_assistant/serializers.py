@@ -16,7 +16,7 @@ class ApplicantsSerializer(serializers.ModelSerializer):
     UploadedCV = serializers.FileField(required=False)
     class Meta:
         model = Applicants
-        fields = ['id', 'Name', 'UploadedCV', 'user','resume_data', 'clean_data']
+        fields = ['id', 'Name', 'UploadedCV', 'user','resume_data', 'clean_data', 'email']	
 
 class JobAdSerializer(serializers.ModelSerializer):
     PostedByHR = HRSerializer(read_only=True)

@@ -21,6 +21,36 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'bzm#-m2#hb0^7@=-+4yfc(^#x3jw3uo_+4capt1muul-mtikm_'
+from datetime import timedelta
+
+# JWT settings for rest_framework_simplejwt
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(hours=12),  # Increase to 1 hour
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=7),  # Optional: Set refresh token lifetime (default is 1 day)
+    'ROTATE_REFRESH_TOKENS': False,
+    'BLACKLIST_AFTER_ROTATION': False,
+    'UPDATE_LAST_LOGIN': False,
+
+    'ALGORITHM': 'HS256',
+    'SIGNING_KEY': 'bzm#-m2#hb0^7@=-+4yfc(^#x3jw3uo_+4capt1muul-mtikm_',
+    'VERIFYING_KEY': None,
+    'AUDIENCE': None,
+    'ISSUER': None,
+    'JWK_URL': None,
+    'LEEWAY': 0,
+
+    'AUTH_HEADER_TYPES': ('Bearer',),
+    'AUTH_HEADER_NAME': 'HTTP_AUTHORIZATION',
+    'USER_ID_FIELD': 'id',
+    'USER_ID_CLAIM': 'user_id',
+    'USER_AUTHENTICATION_RULE': 'rest_framework_simplejwt.authentication.default_user_authentication_rule',
+
+    'AUTH_TOKEN_CLASSES': ('rest_framework_simplejwt.tokens.AccessToken',),
+    'TOKEN_TYPE_CLAIM': 'token_type',
+    'TOKEN_USER_CLASS': 'rest_framework_simplejwt.models.TokenUser',
+
+    'JTI_CLAIM': 'jti',
+}
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -99,7 +129,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'hr_db',  # Your empty database name
         'USER': 'postgres',  # Default PostgreSQL user (or your custom user)
-        'PASSWORD': 'knysys',  # Replace with your PostgreSQL password
+        'PASSWORD': 'sa7190850',  # Replace with your PostgreSQL password
         'HOST': 'localhost',
         'PORT': '5432',  # Default PostgreSQL port
     }
@@ -157,3 +187,12 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # Media configuration
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'portalhr94@gmail.com'
+EMAIL_HOST_PASSWORD = 'gtwymyocdncvcmzt'
+EMAIL_USE_SSL = False
