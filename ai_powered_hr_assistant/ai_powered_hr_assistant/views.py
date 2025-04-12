@@ -176,6 +176,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
 
+
 @api_view(['POST'])
 def create_admin(request):
     serializer = CustomAdminSerializer(data=request.data)
@@ -261,10 +262,18 @@ def user_login(request):
     user = authenticate(request, username=username, password=password)
     if user:
         refresh = RefreshToken.for_user(user)
+        role = 'HR' if HR.objects.filter(user=user).exists() else 'Employee' if Employee.objects.filter(user=user).exists() else 'Candidate'
+        if role == 'HR':
+            profile = HR.objects.get(user=user)
+        elif role == 'Employee':
+            profile = Employee.objects.get(user=user)
+        elif role == 'Candidate':
+            profile = Applicants.objects.get(user=user)
         return Response({
             'refresh': str(refresh),
             'access': str(refresh.access_token),
-            'role': 'HR' if HR.objects.filter(user=user).exists() else 'Employee' if Employee.objects.filter(user=user).exists() else 'Candidate'
+            'role': role,
+            'name': profile.Name,
         }, status=status.HTTP_200_OK)
     return Response({'error': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
 
@@ -288,9 +297,21 @@ def upload_cv(request):
     return Response({"error": "No CV provided"}, status=status.HTTP_400_BAD_REQUEST)
 
 class JobAdListCreate(generics.ListCreateAPIView):
-    queryset = JobAd.objects.all()
     serializer_class = JobAdSerializer
     permission_classes = [IsHRUserOrCandidateReadOnly]
+
+    def get_queryset(self):
+        user = self.request.user
+        role = 'HR' if HR.objects.filter(user=user).exists() else 'Employee' if Employee.objects.filter(user=user).exists() else 'Candidate'
+        if not user.is_authenticated:
+            return JobAd.objects.none()
+
+        if role == 'HR':
+            return JobAd.objects.filter(PostedByHR__user=user)
+        elif role == 'Candidate':
+            return JobAd.objects.all()
+        else:
+            return JobAd.objects.none()
 
     def perform_create(self, serializer):
         hr = HR.objects.get(user=self.request.user)
@@ -310,7 +331,6 @@ class JobAdDetail(generics.RetrieveUpdateDestroyAPIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def perform_update(self, serializer):
-        # Ensure the PostedByHR cannot be changed
         serializer.save(PostedByHR=serializer.instance.PostedByHR)
 
     def destroy(self, request, *args, **kwargs):

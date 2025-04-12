@@ -23,7 +23,8 @@ class JobAdSerializer(serializers.ModelSerializer):
     class Meta:
         model = JobAd
         fields = ['id', 'Title', 'Description', 'Location', 'Pay', 'Qualification', 'Experience', 'JobType', 'PostedByHR', 'PostDate']
-
+        read_only_fields = ['PostedByHR', 'PostDate']
+        
 class EmployeeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Employee
